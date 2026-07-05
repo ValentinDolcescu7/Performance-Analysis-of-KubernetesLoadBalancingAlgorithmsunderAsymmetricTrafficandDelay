@@ -1,0 +1,36 @@
+# Helm values for podinfo — 3 replicas (force one pod per node when 3 nodes are Ready).
+# Install: ./scripts/install-podinfo.sh k8s/helm-values-3nodes.yaml
+#
+# Chart source (local): vendor/podinfo/charts/podinfo
+
+replicaCount: 3
+
+service:
+  type: NodePort
+  nodePort: 30198
+  httpPort: 9898
+
+serviceMonitor:
+  enabled: true
+  interval: 15s
+  additionalLabels:
+    release: kube-prom-stack
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - podinfo
+        topologyKey: kubernetes.io/hostname
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: "1"
+    memory: 256Mi

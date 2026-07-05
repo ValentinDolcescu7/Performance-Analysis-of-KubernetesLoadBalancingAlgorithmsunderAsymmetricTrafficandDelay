@@ -1,0 +1,7 @@
+# Ignore vendored upstream clone if you re-init git here
+vendor/podinfo/
+
+__pycache__/
+*.pyc
+.venv/
+venv/
